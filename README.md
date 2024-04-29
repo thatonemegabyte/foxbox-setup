@@ -1,7 +1,7 @@
 # FoxBox Setup Script
-This script automates the setup process for a Fedora-based system, installing various packages and configurations.
+This script automates the setup process for whenever i install fedora based systems.
 
-## Features
+## What does it do?
 
 - Updates package repositories and installs a bunch of useful apps.
 - Installs some flatpaks.
