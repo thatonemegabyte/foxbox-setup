@@ -1,13 +1,13 @@
-# FoxBox Setup Script
-This script automates the setup process for whenever i install fedora based systems.
+# <span style="color:pink;">FoxBox Setup Script</span>
+This script automates the setup process for whenever I install Fedora-based systems.
 
 ## What does it do?
 
-- Updates package repositories and installs a bunch of useful apps.
-- Installs some flatpaks.
-- Sets zsh as the default shell.
-- Enables pwfeedback in sudoers file.
-- Installs portmaster if not already installed.
+- <span style="color:purple;">Updates package repositories and installs a bunch of useful apps.</span>
+- <span style="color:purple;">Installs some flatpaks.</span>
+- <span style="color:purple;">Sets zsh as the default shell.</span>
+- <span style="color:purple;">Enables pwfeedback in sudoers file.</span>
+- <span style="color:purple;">Installs portmaster if not already installed.</span>
 
 ## Usage
 
@@ -17,6 +17,7 @@ This script automates the setup process for whenever i install fedora based syst
 
 ## Requirements
 
-- Fedora-based system :p
+- <span style="color:purple;">Fedora-based system :p</span>
 
 If you find any issues or have suggestions for improvement, please submit a pull request :3
+
