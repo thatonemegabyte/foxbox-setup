@@ -3,10 +3,8 @@ This script automates the setup process for a Fedora-based system, installing va
 
 ## Features
 
-- Updates package repositories and installs necessary packages.
-- Installs multimedia, graphics, video editing, and network packages.
-- Installs system packages.
-- Installs Flatpak packages.
+- Updates package repositories and installs a bunch of useful apps.
+- Installs some flatpaks.
 - Sets zsh as the default shell.
 - Enables pwfeedback in sudoers file.
 - Installs portmaster if not already installed.
