@@ -1,0 +1,130 @@
+#!/bin/bash
+
+# Function to display centered text
+center_text() {
+    local text="$1"
+    local width=$(tput cols)
+    local padding=$(( ($width + ${#text}) / 2 ))
+    printf "%*s\n" $padding "$text"
+}
+
+# Function to update sudoers file to add pwfeedback
+update_sudoers() {
+    # Check if pwfeedback is already present in sudoers file
+    if sudo grep -q '^Defaults[[:space:]]\+env_reset.*pwfeedback' /etc/sudoers; then
+        echo -e "\e[32m$(center_text "pwfeedback is already enabled in sudoers file.")\e[0m"
+    else
+        # Display a warning message since we can't update sudoers without sudo
+        echo -e "\e[33m$(center_text "Warning: Could not enable pwfeedback in sudoers file. Script needs sudo privileges to update sudoers.")\e[0m"
+    fi
+}
+
+# Function to install portmaster
+install_portmaster() {
+    if ! command -v portmaster &>/dev/null; then
+        echo -e "\e[1m\e[35m$(center_text "Downloading and installing portmaster...")\e[0m"
+        sudo dnf install -y https://updates.safing.io/latest/linux_amd64/packages/portmaster-installer.rpm > /dev/null 2>&1
+        echo -e "\e[1m\e[35m$(center_text "Portmaster installed successfully.")\e[0m"
+    else
+        echo -e "\e[1m\e[35m$(center_text "Portmaster is already installed.")\e[0m"
+    fi
+}
+
+# Define package categories
+MULTIMEDIA_PACKAGES=(
+    obs-studio
+    vlc
+    gimp
+    audacity
+)
+
+GRAPHICS_PACKAGES=(
+    inkscape
+    krita
+    gthumb
+)
+
+VIDEO_PACKAGES=(
+    kdenlive
+)
+
+NETWORK_PACKAGES=(
+    openvpn
+    qbittorrent
+    syncthing
+    thunderbird
+)
+
+SYSTEM_PACKAGES=(
+    bleachbit
+    zoxide
+    zsh
+    menulibre
+    btop
+    iptables
+    curl
+    wget
+    git
+    flatpak
+    automake
+    gcc
+    gcc-c++
+    kernel-devel
+    gnome-tweaks
+    gparted
+)
+
+FLATPAK_PACKAGES=(
+    io.gitlab.librewolf-community
+    org.onlyoffice.desktopeditors 
+    com.usebottles.bottles 
+    com.valvesoftware.Steam 
+    com.vscodium.codium
+)
+
+# Inform the user about package installation
+echo -e "\e[36m$(center_text "FoxBox Setup - Fedora Flavour")\e[0m"
+echo -e "\e[1m\e[35m$(center_text "Updating package repositories and installing necessary packages...")\e[0m"
+
+echo -e ""
+
+# Install packages with dnf
+sudo dnf update -y > /dev/null 2>&1
+
+# Call function to install Portmaster
+install_portmaster
+
+# Install individual packages
+for package in "${MULTIMEDIA_PACKAGES[@]}" "${GRAPHICS_PACKAGES[@]}" "${VIDEO_PACKAGES[@]}" "${NETWORK_PACKAGES[@]}" "${SYSTEM_PACKAGES[@]}"; do
+    echo -e "\e[1m\e[35m$(center_text "Installing $package")\e[0m"
+    sudo dnf install -y "$package" > /dev/null 2>&1
+done
+
+# Install Flatpak packages
+echo -e "\e[1m\e[35m$(center_text "Installing Flatpak packages...")\e[0m"
+for package in "${FLATPAK_PACKAGES[@]}"; do
+    echo -e "\e[1m\e[35m$(center_text "Installing $package")\e[0m"
+    flatpak install --user -y "$package" > /dev/null 2>&1
+done
+
+# Define the command to be added to .zshrc
+ZOXIDE_INIT_COMMAND='eval "$(zoxide init zsh)"'
+
+# Check if the command is already present in .zshrc
+if ! grep -qxF "$ZOXIDE_INIT_COMMAND" ~/.zshrc; then
+    # Append the command to the bottom of .zshrc
+    echo -e "\e[1m\e[35m$(center_text "Adding zoxide initialization to .zshrc...")\e[0m"
+    echo "$ZOXIDE_INIT_COMMAND" >> ~/.zshrc
+else
+    echo -e "\e[1m\e[33m$(center_text "zoxide initialization is already present in .zshrc")\e[0m"
+fi
+
+# Set zsh as default shell
+echo -e "\e[1m\e[35m$(center_text "Setting zsh as the default shell...")\e[0m"
+chsh -s "$(which zsh)"
+
+# Update sudoers
+update_sudoers
+
+echo -e "\e[1m\e[32m$(center_text "FoxBox setup completed successfully.")\e[0m"
+
